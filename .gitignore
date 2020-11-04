@@ -13,6 +13,7 @@ node_modules
 /*.dev.db
 /www
 /www/
+web_src/package-lock.json
 package-lock.json
 .idea
 easydarwin_debug.ini
