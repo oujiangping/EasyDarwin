@@ -36,6 +36,8 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 		TransType         string `form:"transType"`
 		IdleTimeout       int    `form:"idleTimeout"`
 		HeartbeatInterval int    `form:"heartbeatInterval"`
+		VCodecId          int    `form:"VCodecId"`
+		HlsMode           int    `form:"HlsMode"`
 	}
 	var form Form
 	err := c.Bind(&form)
@@ -66,6 +68,8 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 	}
 
 	pusher := rtsp.NewClientPusher(client)
+	pusher.VCodecId = form.VCodecId
+	pusher.HlsMode = form.HlsMode
 	if rtsp.GetServer().GetPusher(pusher.Path()) != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, fmt.Sprintf("Path %s already exists", client.Path))
 		return
@@ -84,6 +88,8 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 		CustomPath:        form.CustomPath,
 		IdleTimeout:       form.IdleTimeout,
 		HeartbeatInterval: form.HeartbeatInterval,
+		VCodecId:          form.VCodecId,
+		HlsMode:           form.HlsMode,
 	}
 	if db.SQLite.Where(&models.Stream{URL: form.URL}).First(&models.Stream{}).RecordNotFound() {
 		db.SQLite.Create(&stream)

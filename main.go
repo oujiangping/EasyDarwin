@@ -155,6 +155,8 @@ func (p *program) Start(s service.Service) (err error) {
 					continue
 				}
 				pusher := rtsp.NewClientPusher(client)
+				pusher.VCodecId = v.VCodecId
+				pusher.HlsMode = v.HlsMode
 				rtsp.GetServer().AddPusher(pusher)
 				//streams = streams[0:i]
 				//streams = append(streams[:i], streams[i+1:]...)

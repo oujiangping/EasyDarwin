@@ -5,4 +5,6 @@ type Stream struct {
 	CustomPath        string `gorm:"type:varchar(256)"`
 	IdleTimeout       int
 	HeartbeatInterval int
+	VCodecId          int
+	HlsMode           int
 }

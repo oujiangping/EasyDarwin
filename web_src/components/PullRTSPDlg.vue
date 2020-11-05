@@ -37,7 +37,27 @@
                 <input type="text" id="input-heartbeat-interval" class="form-control" name="heartbeatInterval" data-vv-as="心跳间隔" v-validate="'numeric'" v-model.trim="form.heartbeatInterval" placeholder="默认使用系统配置">
                 <span class="help-block">{{errors.first('heartbeatInterval')}}</span>
             </div>
-        </div>                         
+        </div>
+        <div class="form-group">
+            <label for="input-hls-mode" class="col-sm-3 control-label">HLS模式</label>
+            <div class="col-sm-8">
+                <el-radio-group id="input-enable-hls" v-model.trim="form.HlsMode" size="mini">
+                    <el-radio-button label="0">不启动</el-radio-button>
+                    <el-radio-button label="1">直播模式</el-radio-button>
+                    <el-radio-button label="2">录像模式模式</el-radio-button>
+                </el-radio-group>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-v-codec-id" class="col-sm-3 control-label">转码格式（强行转码）</label>
+            <div class="col-sm-8">
+                <el-radio-group id="input-v-codec-id" v-model.trim="form.VCodecId" size="mini">
+                    <el-radio-button label="0">保持原有</el-radio-button>
+                    <el-radio-button label="1">H264</el-radio-button>
+                    <el-radio-button label="2">H265</el-radio-button>
+                </el-radio-group>
+            </div>
+        </div>
     </FormDlg>
 </template>
 

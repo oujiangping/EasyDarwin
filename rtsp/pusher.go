@@ -21,6 +21,8 @@ type Pusher struct {
 	spsppsInSTAPaPack bool
 	cond              *sync.Cond
 	queue             []*RTPPack
+	VCodecId          int
+	HlsMode           int
 }
 
 func (pusher *Pusher) String() string {
