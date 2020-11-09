@@ -2,6 +2,7 @@ package rtsp
 
 import (
 	"fmt"
+	"github.com/penggy/EasyGoLib/utils"
 	"log"
 	"net"
 	"os"
@@ -11,9 +12,6 @@ import (
 	"strings"
 	"sync"
 	"syscall"
-	"time"
-
-	"github.com/penggy/EasyGoLib/utils"
 )
 
 type Server struct {
@@ -83,7 +81,7 @@ func (server *Server) Start() (err error) {
 						if pusher.HlsMode == 1 {
 							hlsListSize = 5
 						}
-						dir := path.Join(m3u8DirPath, pusher.Path(), time.Now().Format("20060102"))
+						dir := path.Join(m3u8DirPath, pusher.Path())
 						err := utils.EnsureDir(dir)
 						if err != nil {
 							logger.Printf("EnsureDir:[%s] err:%v.", dir, err)
@@ -141,6 +139,11 @@ func (server *Server) Start() (err error) {
 							// 	logger.Printf("process:%v Stdout closed.", proc)
 							// }
 							logger.Printf("process:%v terminate.", proc)
+							dir := path.Join(m3u8DirPath, pusher.Path())
+							//直播模式删除hls目录
+							if utils.Exist(dir) && pusher.HlsMode == 1 {
+								os.RemoveAll(dir)
+							}
 						}
 						delete(pusher2ffmpegMap, pusher)
 						logger.Printf("delete ffmpeg from pull stream from pusher[%v]", pusher)
