@@ -7,6 +7,7 @@ import (
 	"github.com/EasyDarwin/EasyDarwin/rtsp"
 	"github.com/gin-gonic/gin"
 	"github.com/penggy/EasyGoLib/utils"
+	"net/url"
 )
 
 /**
@@ -47,11 +48,16 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 	if err := c.Bind(form); err != nil {
 		return
 	}
-	hostname := utils.GetRequestHostname(c.Request)
+	uRL, _ := url.Parse(c.Request.Referer())
+	hlsPort := uRL.Port()
+	hostname := uRL.Host
+	hlsScheme := uRL.Scheme
+	//hostname := utils.GetRequestHostname(c.Request)
 	pushers := make([]interface{}, 0)
 	for _, pusher := range rtsp.Instance.GetPushers() {
 		port := pusher.Server().TCPPort
 		rtsp := fmt.Sprintf("rtsp://%s:%d%s", hostname, port, pusher.Path())
+		hls := fmt.Sprintf("%s%s:%d%s", hlsScheme, hostname, hlsPort, pusher.Path())
 		if port == 554 {
 			rtsp = fmt.Sprintf("rtsp://%s%s", hostname, pusher.Path())
 		}
@@ -61,6 +67,7 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 		pushers = append(pushers, map[string]interface{}{
 			"id":        pusher.ID(),
 			"url":       rtsp,
+			"hls":       hls,
 			"path":      pusher.Path(),
 			"source":    pusher.Source(),
 			"transType": pusher.TransType(),
