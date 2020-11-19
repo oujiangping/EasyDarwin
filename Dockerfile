@@ -33,8 +33,8 @@ RUN echo "export GOBIN=/root/go/bin" >> /root/.bashrc
 RUN echo "export PATH=$PATH:/root/go/bin" >> /root/.bashrc
 WORKDIR /root/src/github.com/EasyDarwin/EasyDarwin
 RUN npm run build:lin
-WORKDIR /root/src/github.com/EasyDarwin/EasyDarwin/web_src
-RUN npm i
-WORKDIR /root/src/github.com/EasyDarwin/EasyDarwin
-RUN npm i
-RUN npm run build:www
+RUN cp easydarwin /bin/
+COPY www.tar.gz /usr/share/nginx/html/
+WORKDIR /usr/share/nginx/html/
+RUN tar -xvf www.tar.gz
+RUN mv www easydarwin
