@@ -49,6 +49,15 @@
                         <span v-else>-</span>
                       </template>
                     </el-table-column>
+                    <el-table-column label="hls地址" min-width="240" show-overflow-tooltip>
+                      <template slot-scope="scope">
+                        <span v-if="scope.row.hls">
+                          <i class="fa fa-copy" role="button" v-clipboard="scope.row.hls" title="点击拷贝" @success="$message({type:'success', message:'成功拷贝到粘贴板'})"></i>
+                          {{scope.row.hls}}
+                          </span>
+                        <span v-else>-</span>
+                      </template>
+                    </el-table-column>
                     <el-table-column prop="transType" label="传输方式" min-width="100"></el-table-column>                            
                     <el-table-column prop="inBytes" label="上行流量" min-width="120" :formatter="formatBytes" sortable="custom"></el-table-column>
                     <el-table-column prop="outBytes" label="下行流量" min-width="120" :formatter="formatBytes" sortable="custom"></el-table-column>
