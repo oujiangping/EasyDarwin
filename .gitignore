@@ -11,8 +11,6 @@ node_modules
 /*.tar.gz
 /*.dev.ini
 /*.dev.db
-/www
-/www/
 web_src/package-lock.json
 package-lock.json
 .idea
