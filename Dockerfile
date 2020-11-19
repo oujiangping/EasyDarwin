@@ -25,8 +25,6 @@ ENV GOBIN=/root/go/bin
 ENV PATH $PATH:$GOBIN
 RUN go get -u -v github.com/kardianos/govendor
 RUN go get -u -v github.com/penggy/gobuild
-RUN npm i -g apidoc
-RUN npm i -g rimraf
 RUN echo "export GOROOT=/root/go" >> /root/.bashrc
 RUN echo "export GOPATH=/root" >> /root/.bashrc
 RUN echo "export GOBIN=/root/go/bin" >> /root/.bashrc
@@ -34,7 +32,10 @@ RUN echo "export PATH=$PATH:/root/go/bin" >> /root/.bashrc
 WORKDIR /root/src/github.com/EasyDarwin/EasyDarwin
 RUN npm run build:lin
 RUN cp easydarwin /bin/
-COPY www.tar.gz /usr/share/nginx/html/
-WORKDIR /usr/share/nginx/html/
+COPY www.tar.gz /var/www/html/
+WORKDIR /var/www/html/
 RUN tar -xvf www.tar.gz
 RUN mv www easydarwin
+COPY default /etc/nginx/sites-available/default
+RUN apt-get install --fix-missing ffmpeg
+CMD nginx;easydarwin
