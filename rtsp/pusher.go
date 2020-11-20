@@ -15,6 +15,7 @@ type Pusher struct {
 	players           map[string]*Player //SessionID <-> Player
 	playersLock       sync.RWMutex
 	gopCacheEnable    bool
+	pusherQueueLimit  int
 	gopCache          []*RTPPack
 	gopCacheLock      sync.RWMutex
 	UDPServer         *UDPServer
@@ -161,6 +162,7 @@ func NewClientPusher(client *RTSPClient) (pusher *Pusher) {
 		Session:        nil,
 		players:        make(map[string]*Player),
 		gopCacheEnable: utils.Conf().Section("rtsp").Key("gop_cache_enable").MustBool(true),
+		pusherQueueLimit: utils.Conf().Section("rtsp").Key("pusher_queue_limit").MustInt(500),
 		gopCache:       make([]*RTPPack, 0),
 
 		cond:  sync.NewCond(&sync.Mutex{}),
@@ -250,6 +252,9 @@ func (pusher *Pusher) RebindClient(client *RTSPClient) bool {
 func (pusher *Pusher) QueueRTP(pack *RTPPack) *Pusher {
 	pusher.cond.L.Lock()
 	pusher.queue = append(pusher.queue, pack)
+	if len(pusher.queue) > pusher.pusherQueueLimit {
+		pusher.queue = pusher.queue[1:]
+	}
 	pusher.cond.Signal()
 	pusher.cond.L.Unlock()
 	return pusher
