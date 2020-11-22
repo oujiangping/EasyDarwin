@@ -49,14 +49,14 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 		return
 	}
 	uRL, _ := url.Parse(c.Request.Referer())
-	hostname := uRL.Host
+	hlsHostname := uRL.Host
 	hlsScheme := uRL.Scheme
-	//hostname := utils.GetRequestHostname(c.Request)
+	hostname := utils.GetRequestHostname(c.Request)
 	pushers := make([]interface{}, 0)
 	for _, pusher := range rtsp.Instance.GetPushers() {
 		port := pusher.Server().TCPPort
 		rtsp := fmt.Sprintf("rtsp://%s:%d%s", hostname, port, pusher.Path())
-		hls := fmt.Sprintf("%s://%s/hls/%s/out.m3u8", hlsScheme, hostname, pusher.Path())
+		hls := fmt.Sprintf("%s://%s/hls/%s/out.m3u8", hlsScheme, hlsHostname, pusher.Path())
 		if port == 554 {
 			rtsp = fmt.Sprintf("rtsp://%s%s", hostname, pusher.Path())
 		}

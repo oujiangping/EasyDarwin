@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -17,6 +18,7 @@ import (
 	figure "github.com/common-nighthawk/go-figure"
 	"github.com/penggy/EasyGoLib/utils"
 	"github.com/penggy/service"
+	_ "net/http/pprof"
 )
 
 var (
@@ -136,7 +138,12 @@ func (p *program) Start(s service.Service) (err error) {
 			}
 			for i := len(streams) - 1; i > -1; i-- {
 				v := streams[i]
-				if rtsp.GetServer().GetPusher(v.CustomPath) != nil {
+				clientPath := v.CustomPath
+				if clientPath == "" {
+					clientUrl, _ := url.Parse(v.URL)
+					clientPath = clientUrl.Path
+				}
+				if rtsp.GetServer().GetPusher(clientPath) != nil {
 					continue
 				}
 				agent := fmt.Sprintf("EasyDarwinGo/%s", routers.BuildVersion)
